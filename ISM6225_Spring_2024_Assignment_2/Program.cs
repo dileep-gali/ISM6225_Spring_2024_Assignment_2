@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  
 YOU ARE NOT ALLOWED TO MODIFY ANY FUNCTION DEFINIDTION's PROVIDED.
 WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
@@ -48,13 +48,13 @@ namespace ISM6225_Spring_2024_Assignment_2
 
             //Question 6:
             Console.WriteLine("Question 6:");
-            int[] nums5 = { 3,6,9,1 };
+            int[] nums5 = { 3, 6, 9, 1 };
             int maxGap = MaximumGap(nums5);
             Console.WriteLine(maxGap);
 
             //Question 7:
             Console.WriteLine("Question 7:");
-            int[] nums6 = { 2,1,2 };
+            int[] nums6 = { 2, 1, 2 };
             int largestPerimeterResult = LargestPerimeter(nums6);
             Console.WriteLine(largestPerimeterResult);
 
@@ -83,7 +83,7 @@ namespace ISM6225_Spring_2024_Assignment_2
         Example 2:
 
         Input: nums = [0,0,1,1,1,2,2,3,3,4]
-        Output: 5, nums = [0,1,2,3,4,_,_,_,_,_]
+        Output: 5, nums = [0,1,2,3,4,,,,,_]
         Explanation: Your function should return k = 5, with the first five elements of nums being 0, 1, 2, 3, and 4 respectively.
         It does not matter what you leave beyond the returned k (hence they are underscores).
  
@@ -100,7 +100,21 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums.Length == 0)
+                    return 0;
+
+                int i = 0; // Slow pointer
+                for (int j = 1; j < nums.Length; j++) // Fast pointer
+                {
+                    if (nums[j] != nums[i])
+                    {
+                        i++;
+                        nums[i] = nums[j];
+                    }
+                }
+
+                return i + 1;
+
             }
             catch (Exception)
             {
@@ -135,7 +149,26 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                // Initialize a pointer to track the position where non-zero elements should be placed
+                int nonZeroIndex = 0;
+
+                // Traverse the array
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    // If the current element is non-zero, move it to the front of the array
+                    if (nums[i] != 0)
+                    {
+                        nums[nonZeroIndex] = nums[i];
+                        nonZeroIndex++;
+                    }
+                }
+
+                // Fill the remaining positions with zeros
+                for (int i = nonZeroIndex; i < nums.Length; i++)
+                {
+                    nums[i] = 0;
+                }
+                return nums.ToList();
             }
             catch (Exception)
             {
@@ -186,7 +219,55 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                Array.Sort(nums); // Sort the array
+
+                IList<IList<int>> triplets = new List<IList<int>>();
+
+                for (int i = 0; i < nums.Length - 2; i++)
+                {
+                    // Skip duplicate values for the first element of the triplet
+                    if (i > 0 && nums[i] == nums[i - 1])
+                        continue;
+
+                    int target = -nums[i];
+                    int left = i + 1;
+                    int right = nums.Length - 1;
+
+                    while (left < right)
+                    {
+                        int sum = nums[left] + nums[right];
+
+                        if (sum == target)
+                        {
+                            // Found a valid triplet
+                            triplets.Add(new List<int> { nums[i], nums[left], nums[right] });
+
+                            // Skip duplicate values for the second element of the triplet
+                            while (left < right && nums[left] == nums[left + 1])
+                                left++;
+
+                            // Skip duplicate values for the third element of the triplet
+                            while (left < right && nums[right] == nums[right - 1])
+                                right--;
+
+                            // Move both pointers to find the next valid pair
+                            left++;
+                            right--;
+                        }
+                        else if (sum < target)
+                        {
+                            // Increment left pointer to increase the sum
+                            left++;
+                        }
+                        else
+                        {
+                            // Decrement right pointer to decrease the sum
+                            right--;
+                        }
+                    }
+                }
+
+                return triplets;
             }
             catch (Exception)
             {
@@ -221,7 +302,23 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int maxCount = 0;
+                int currentCount = 0;
+
+                foreach (int num in nums)
+                {
+                    if (num == 1)
+                    {
+                        currentCount++; // Increment current consecutive 1's count
+                        maxCount = Math.Max(maxCount, currentCount); // Update max count if current count is greater
+                    }
+                    else
+                    {
+                        currentCount = 0; // Reset current count on encountering 0
+                    }
+                }
+
+                return maxCount;
             }
             catch (Exception)
             {
@@ -232,12 +329,12 @@ namespace ISM6225_Spring_2024_Assignment_2
         /*
 
         Question 5:
-        You are tasked with writing a program that converts a binary number to its equivalent decimal representation without using bitwise operators or the `Math.Pow` function. You will implement a function called `BinaryToDecimal` which takes an integer representing a binary number as input and returns its decimal equivalent. 
+        You are tasked with writing a program that converts a binary number to its equivalent decimal representation without using bitwise operators or the Math.Pow function. You will implement a function called BinaryToDecimal which takes an integer representing a binary number as input and returns its decimal equivalent. 
 
         Requirements:
         1. Your program should prompt the user to input a binary number as an integer. 
-        2. Implement the `BinaryToDecimal` function, which takes the binary number as input and returns its decimal equivalent. 
-        3. Avoid using bitwise operators (`<<`, `>>`, `&`, `|`, `^`) and the `Math.Pow` function for any calculations. 
+        2. Implement the BinaryToDecimal function, which takes the binary number as input and returns its decimal equivalent. 
+        3. Avoid using bitwise operators (<<, >>, &, |, ^) and the Math.Pow function for any calculations. 
         4. Use only basic arithmetic operations such as addition, subtraction, multiplication, and division. 
         5. Ensure the program displays the input binary number and its corresponding decimal value.
 
@@ -257,7 +354,19 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int decimalValue = 0;
+                int baseValue = 1; // Base value for binary place values (2^0 = 1 for the least significant bit)
+
+                while (binary > 0)
+                {
+                    int remainder = binary % 10; // Get the least significant bit (remainder when divided by 10)
+                    decimalValue += remainder * baseValue; // Add the binary digit multiplied by its place value to the decimal value
+                    binary /= 10; // Move to the next binary digit (right shift)
+
+                    baseValue *= 2; // Update the base value to the next binary place value (2^n)
+                }
+
+                return decimalValue;
             }
             catch (Exception)
             {
@@ -295,7 +404,21 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+
+                if (nums.Length < 2)
+                    return 0;
+
+                Array.Sort(nums);
+                int maxGap = 0;
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    int diff = nums[i] - nums[i - 1];
+                    if (diff > maxGap)
+                        maxGap = diff;
+                }
+
+                return maxGap;
             }
             catch (Exception)
             {
@@ -335,6 +458,25 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
+                // Sort the array in descending order
+                Array.Sort(nums);
+                Array.Reverse(nums);
+
+                // Check for the largest perimeter
+                for (int i = 0; i <= nums.Length - 3; i++)
+                {
+                    int a = nums[i];
+                    int b = nums[i + 1];
+                    int c = nums[i + 2];
+
+                    // Check the triangle inequality condition
+                    if (a < b + c)
+                    {
+                        return a + b + c; // Found the largest perimeter
+                    }
+                }
+
+                // No valid triangle found
                 return 0;
             }
             catch (Exception)
@@ -389,7 +531,18 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return "";
+                while (s.Contains(part))
+                {
+                    // Find the index of the leftmost occurrence of part
+                    int index = s.IndexOf(part);
+                    if (index != -1)
+                    {
+                        // Remove the part starting at the found index
+                        s = s.Remove(index, part.Length);
+                    }
+                }
+
+                return s;
             }
             catch (Exception)
             {
